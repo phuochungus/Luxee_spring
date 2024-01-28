@@ -29,16 +29,16 @@ public class Variant {
 
     private String barcode;
 
-    private double price;
+    private Double price;
 
     private Double compareAtPrice;
 
-    private double costPerItem;
+    private Double costPerItem;
 
-    private long unavailable;
+    private Long unavailable;
 
-    private long available;
+    private Long available;
 
-    private long committed;
+    private Long committed;
 
 }
