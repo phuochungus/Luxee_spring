@@ -7,7 +7,6 @@ import me.phuochung.greenmart.media.Media;
 import java.util.ArrayList;
 import java.util.List;
 import me.phuochung.greenmart.option.Option;
-import me.phuochung.greenmart.productoptionvariant.ProductOptionVariant;
 
 @Data
 @Entity
