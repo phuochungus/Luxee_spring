@@ -1,6 +1,8 @@
 package me.phuochung.greenmart.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,19 +18,20 @@ import me.phuochung.greenmart.option.Option;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    private boolean isDraft = false;
+    private Boolean isDraft = false;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<Media> media = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product")
     private List<Option> options = new ArrayList<>();
 
-    @NotBlank(message = "Title is mandatory")
-    @NotEmpty(message = "Title is mandatory")
-    @NotNull(message = "Title is mandatory")
+    @NotBlank(message = "title is mandatory")
+    @Column(nullable = false)
     private String title;
 
     private String description;
@@ -37,15 +40,18 @@ public class Product {
 
     private String barcode;
 
-    private double price;
+    @Column(nullable = false)
+    @NotNull(message = "price is mandatory")
+    @Min(0)
+    private Double price;
 
     private Double compareAtPrice;
 
-    private double costPerItem = 0;
+    private Double costPerItem;
 
-    private long unavailable = 0;
+    private Long unavailable = 0L;
 
-    private long available = 0;
+    private Long available = 0L;
 
-    private long committed = 0;
+    private Long committed = 0L;
 }

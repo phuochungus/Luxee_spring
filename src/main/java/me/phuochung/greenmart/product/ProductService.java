@@ -1,10 +1,9 @@
 package me.phuochung.greenmart.product;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
-import lombok.NonNull;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -18,7 +17,11 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product createProduct(@NonNull Product product) {    
+    public Optional<Product> getProduct(Long id) {
+        return productRepository.findById(id);
+    }
+
+    public Product createProduct(Product product) {
         return productRepository.save(product);
     }
 }
