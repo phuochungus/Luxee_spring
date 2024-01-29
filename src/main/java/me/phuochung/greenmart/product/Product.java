@@ -47,7 +47,7 @@ public class Product {
 
     private Double compareAtPrice;
 
-    private Double costPerItem;
+    private Double cost;
 
     private Long unavailable = 0L;
 
