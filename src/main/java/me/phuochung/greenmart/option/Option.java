@@ -19,6 +19,5 @@ public class Option {
     private Product product;
 
     private String name;
-
     private List<String> values = new ArrayList<>();
 }
