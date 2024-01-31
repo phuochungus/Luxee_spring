@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import me.phuochung.greenmart.media.Media;
 import me.phuochung.greenmart.option.Option;
 
@@ -26,25 +25,27 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private List<Option> options = new ArrayList<>();
 
-    @NotBlank(message = "title is mandatory")
+    @NotBlank(message = "\"title\" is required")
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    @NotNull(message = "price is mandatory")
+    @NotNull(message = "\"price\" is required")
     @Min(0)
+    @Column(nullable = false)
     private Double price;
 
-    private String description;
+    @Column(nullable = false)
+    private Boolean isDraft = false;
+
     private String SKU;
     private String barcode;
-    private Boolean isDraft = false;
+    private Long unavailable;
+    private Long available;
+    private Long committed;
     private Double compareAtPrice;
-    private Double cost;
-    private Long unavailable = 0L;
-    private Long available = 0L;
-    private Long committed = 0L;
+    private Double cost = 0.0;
+    private String description;
 }
