@@ -1,17 +1,17 @@
 package me.phuochung.greenmart.product;
 
+import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final PricingValidator pricingValidator;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -21,7 +21,7 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product) throws ConstraintViolationException {
         return productRepository.save(product);
     }
 }

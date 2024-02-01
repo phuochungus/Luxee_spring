@@ -32,10 +32,9 @@ public class Product {
     @Column(nullable = false)
     private String title;
 
-    @NotNull(message = "\"price\" is required")
-    @Min(0)
-    @Column(nullable = false)
     private Double price;
+    private Double compareAtPrice;
+    private Double cost;
 
     @Column(nullable = false)
     private Boolean isDraft = false;
@@ -45,7 +44,5 @@ public class Product {
     private Long unavailable;
     private Long available;
     private Long committed;
-    private Double compareAtPrice;
-    private Double cost = 0.0;
     private String description;
 }
