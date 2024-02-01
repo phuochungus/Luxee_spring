@@ -1,5 +1,6 @@
 package me.phuochung.greenmart.media;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import me.phuochung.greenmart.product.Product;
@@ -21,6 +22,7 @@ public class Media {
 
     @ManyToOne
     @JoinColumn()
+    @JsonBackReference
     private Product product;
 
     @ManyToOne

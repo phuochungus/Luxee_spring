@@ -1,5 +1,6 @@
 package me.phuochung.greenmart.option;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import me.phuochung.greenmart.product.Product;
@@ -11,11 +12,12 @@ import java.util.List;
 @Entity
 public class Option {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToOne()
     @JoinColumn()
-    @MapsId
+    @JsonBackReference
     private Product product;
 
     private String name;

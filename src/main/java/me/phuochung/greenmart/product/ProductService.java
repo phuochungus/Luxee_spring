@@ -1,8 +1,9 @@
 package me.phuochung.greenmart.product;
 
-import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,12 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Product createProduct(Product product) throws ConstraintViolationException {
+    public Product createProduct(Product product) throws ResponseStatusException {
+        if (!pricingValidator.isValid(product.getOptions(), product.getPrice())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Invalid price and options, either price is null or options must be" +
+                            " empty");
+        }
         return productRepository.save(product);
     }
 }

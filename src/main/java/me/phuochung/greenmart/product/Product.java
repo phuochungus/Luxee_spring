@@ -1,9 +1,8 @@
 package me.phuochung.greenmart.product;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +22,11 @@ public class Product {
     private Long id;
 
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<Media> media = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     private List<Option> options = new ArrayList<>();
 
     @NotBlank(message = "\"title\" is required")
