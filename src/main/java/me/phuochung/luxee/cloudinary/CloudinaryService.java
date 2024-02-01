@@ -1,8 +1,8 @@
-package me.phuochung.greenmart.cloudinary;
+package me.phuochung.luxee.cloudinary;
 
 import com.cloudinary.Cloudinary;
-import me.phuochung.greenmart.media.MediaService;
-import me.phuochung.greenmart.media.Signature;
+import me.phuochung.luxee.media.MediaService;
+import me.phuochung.luxee.media.Signature;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

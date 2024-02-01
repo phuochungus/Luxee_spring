@@ -1,4 +1,4 @@
-package me.phuochung.greenmart;
+package me.phuochung.luxee;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.media;
+package me.phuochung.luxee.media;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

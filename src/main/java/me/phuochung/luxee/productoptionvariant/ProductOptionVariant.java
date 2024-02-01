@@ -1,13 +1,13 @@
-package me.phuochung.greenmart.productoptionvariant;
+package me.phuochung.luxee.productoptionvariant;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
-import me.phuochung.greenmart.product.Product;
-import me.phuochung.greenmart.variant.Variant;
-import me.phuochung.greenmart.option.Option;
+import me.phuochung.luxee.product.Product;
+import me.phuochung.luxee.variant.Variant;
+import me.phuochung.luxee.option.Option;
 
 @Data
 @Entity

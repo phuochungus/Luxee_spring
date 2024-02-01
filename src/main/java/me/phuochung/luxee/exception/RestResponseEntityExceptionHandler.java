@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.exception;
+package me.phuochung.luxee.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;

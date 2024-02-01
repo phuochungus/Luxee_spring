@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.variant;
+package me.phuochung.luxee.variant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
-import me.phuochung.greenmart.media.Media;
+import me.phuochung.luxee.media.Media;
 
 @Entity
 @Data

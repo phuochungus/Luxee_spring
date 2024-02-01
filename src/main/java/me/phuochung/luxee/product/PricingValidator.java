@@ -1,6 +1,6 @@
-package me.phuochung.greenmart.product;
+package me.phuochung.luxee.product;
 
-import me.phuochung.greenmart.option.Option;
+import me.phuochung.luxee.option.Option;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 

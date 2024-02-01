@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.product;
+package me.phuochung.luxee.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

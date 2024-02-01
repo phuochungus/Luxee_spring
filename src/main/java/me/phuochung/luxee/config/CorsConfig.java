@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.config;
+package me.phuochung.luxee.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

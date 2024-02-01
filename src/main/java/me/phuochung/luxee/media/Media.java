@@ -1,10 +1,10 @@
-package me.phuochung.greenmart.media;
+package me.phuochung.luxee.media;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import me.phuochung.greenmart.product.Product;
-import me.phuochung.greenmart.variant.Variant;
+import me.phuochung.luxee.product.Product;
+import me.phuochung.luxee.variant.Variant;
 
 enum MediaType {
     IMAGE, VIDEO

@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.product;
+package me.phuochung.luxee.product;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.phuochung.greenmart.media.Media;
-import me.phuochung.greenmart.option.Option;
+import me.phuochung.luxee.media.Media;
+import me.phuochung.luxee.option.Option;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.media;
+package me.phuochung.luxee.media;
 
 
 public interface MediaService {

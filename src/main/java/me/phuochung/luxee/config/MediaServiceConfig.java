@@ -1,7 +1,7 @@
-package me.phuochung.greenmart.config;
+package me.phuochung.luxee.config;
 
-import me.phuochung.greenmart.cloudinary.CloudinaryService;
-import me.phuochung.greenmart.media.MediaService;
+import me.phuochung.luxee.cloudinary.CloudinaryService;
+import me.phuochung.luxee.media.MediaService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

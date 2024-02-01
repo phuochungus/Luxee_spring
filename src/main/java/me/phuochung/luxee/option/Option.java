@@ -1,9 +1,9 @@
-package me.phuochung.greenmart.option;
+package me.phuochung.luxee.option;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import me.phuochung.greenmart.product.Product;
+import me.phuochung.luxee.product.Product;
 
 import java.util.ArrayList;
 import java.util.List;

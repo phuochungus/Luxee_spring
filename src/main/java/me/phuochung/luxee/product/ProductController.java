@@ -1,8 +1,8 @@
-package me.phuochung.greenmart.product;
+package me.phuochung.luxee.product;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import me.phuochung.greenmart.option.Option;
+import me.phuochung.luxee.option.Option;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

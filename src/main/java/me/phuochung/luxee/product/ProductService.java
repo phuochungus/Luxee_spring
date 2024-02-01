@@ -1,4 +1,4 @@
-package me.phuochung.greenmart.product;
+package me.phuochung.luxee.product;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
