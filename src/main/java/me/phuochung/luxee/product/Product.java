@@ -21,12 +21,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "product")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE)
+    @JsonManagedReference("product-media")
     private List<Media> media = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
-    @JsonManagedReference
+    @JsonManagedReference("product-option")
     private List<Option> options = new ArrayList<>();
 
     @NotBlank(message = "\"title\" is required")

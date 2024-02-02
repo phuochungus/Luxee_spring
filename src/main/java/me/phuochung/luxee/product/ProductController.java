@@ -5,11 +5,13 @@ import lombok.RequiredArgsConstructor;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -43,7 +45,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/media")
-    public void addMedia(@PathVariable Long id, @RequestBody List<Media> media) {
+    public void addMedia(@PathVariable Long id, @RequestBody List<@Valid Media> media) {
         productService.updateMedia(id, media);
     }
 

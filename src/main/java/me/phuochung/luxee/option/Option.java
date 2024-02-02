@@ -17,7 +17,7 @@ public class Option {
 
     @ManyToOne()
     @JoinColumn()
-    @JsonBackReference
+    @JsonBackReference("product-option")
     private Product product;
 
     private String name;

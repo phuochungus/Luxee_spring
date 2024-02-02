@@ -37,6 +37,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Product not found"));
         product.setMedia(media);
+        media.forEach((m) -> m.setProduct(product));
         return productRepository.save(product);
     }
 }

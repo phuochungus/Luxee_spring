@@ -3,6 +3,7 @@ package me.phuochung.luxee.variant;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,13 +17,14 @@ import me.phuochung.luxee.media.Media;
 public class Variant {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     private String title;
 
     private String description;
 
     @OneToMany(mappedBy = "variant")
+    @JsonManagedReference("variant-media")
     private List<Media> media = new ArrayList<>();
 
     private String SKU;
