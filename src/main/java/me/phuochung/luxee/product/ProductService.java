@@ -1,6 +1,7 @@
 package me.phuochung.luxee.product;
 
 import lombok.RequiredArgsConstructor;
+import me.phuochung.luxee.media.Media;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,6 +29,14 @@ public class ProductService {
                     "Invalid price and options, either price is null or options must be" +
                             " empty");
         }
+        return productRepository.save(product);
+    }
+
+    public Product updateMedia(Long id, List<Media> media) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Product not found"));
+        product.setMedia(media);
         return productRepository.save(product);
     }
 }
