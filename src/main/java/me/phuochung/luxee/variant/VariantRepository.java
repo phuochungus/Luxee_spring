@@ -1,9 +1,8 @@
-package me.phuochung.luxee.product;
+package me.phuochung.luxee.variant;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
-
+public interface VariantRepository extends JpaRepository<Variant, Long> {
 }

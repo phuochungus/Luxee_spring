@@ -10,32 +10,7 @@ import me.phuochung.luxee.variant.Variant;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedEntityGraph(
-        name = "product-graph",
-        attributeNodes = {
-                @NamedAttributeNode("media"),
-                @NamedAttributeNode("options"),
-                @NamedAttributeNode(value = "variants", subgraph = "variant-subgraph")
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "variant-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("media"),
-                                @NamedAttributeNode(value = "selectedOptionsValue",
-                                        subgraph = "selected-option-value-subgraph")
-                        }
 
-                ),
-                @NamedSubgraph(
-                        name = "selected-option-value-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("option"),
-                                @NamedAttributeNode("valueIndex")
-                        }
-                )
-        }
-)
 @Data
 @Entity
 public class Product {
@@ -43,14 +18,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Media> media = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
     private List<Option> options = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "product")
     private List<Variant> variants = new ArrayList<>();
 
     @NotBlank(message = "\"title\" is required")

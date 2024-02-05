@@ -1,9 +1,11 @@
 package me.phuochung.luxee.product;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;
+import me.phuochung.luxee.variant.VariantRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
     private final PricingValidator pricingValidator;
+    private final VariantRepository variantRepository;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -25,6 +28,7 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    @Transactional
     public Product createProduct(Product product) throws ResponseStatusException {
         if (!pricingValidator.isValid(product.getOptions(), product.getPrice())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
@@ -40,6 +44,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional
     public void updateMedia(Long id, List<Media> media) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -49,20 +54,21 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @Transactional
     public void updateVariants(Long productId, List<Variant> variants) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Product not found"));
-        final List<Option> options = product.getOptions();
+
+        product.setVariants(variants);
         variants.forEach((variant) -> variant.setProduct(product));
 
-        for(Variant variant : variants) {
-            for(int i = 0; i < options.size(); i++) {
+        final List<Option> options = product.getOptions();
+        for (Variant variant : variants) {
+            for (int i = 0; i < options.size(); i++) {
                 variant.getSelectedOptionsValue().get(i).setOption(options.get(i));
             }
         }
-
-        product.setVariants(variants);
-        productRepository.save(product);
+        variantRepository.saveAll(variants);
     }
 }

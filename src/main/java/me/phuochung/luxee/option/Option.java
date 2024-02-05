@@ -1,5 +1,6 @@
 package me.phuochung.luxee.option;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -19,13 +20,11 @@ public class Option {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     @ToString.Exclude
+    @JsonIgnore
     private Product product;
 
-    @Column(name = "product_id", updatable = false, insertable = false, nullable = false)
-    private Long productId;
-
-
-    @OneToMany(mappedBy = "option", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "option")
+    @JsonIgnore
     private final List<SelectedOptionValue> selectedOptionValues = new ArrayList<>();
 
     private final List<String> values = new ArrayList<>();

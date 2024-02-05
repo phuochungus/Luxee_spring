@@ -1,8 +1,8 @@
 package me.phuochung.luxee.selectedoptionvalue;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;
 
@@ -10,20 +10,21 @@ import me.phuochung.luxee.variant.Variant;
 @Entity
 public class SelectedOptionValue {
     @Id
+    @Column(name = "option_id")
+    private Long optionId;
+
+    @Id
+    @Column(name = "variant_id")
+    private Long variantId;
+
     @JoinColumn(name = "option_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Option option;
 
-    @Column(name = "option_id", updatable = false, insertable = false, nullable = false)
-    private Long optionId;
-
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variant_id")
+    @JsonIgnore
     private Variant variant;
-
-    @Column(name = "variant_id", updatable = false, insertable = false, nullable = false)
-    private Long variantId;
 
     private Integer valueIndex;
 }
