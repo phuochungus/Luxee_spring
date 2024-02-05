@@ -1,12 +1,10 @@
 package me.phuochung.luxee.option;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 import me.phuochung.luxee.product.Product;
 import me.phuochung.luxee.selectedoptionvalue.SelectedOptionValue;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +18,6 @@ public class Option {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    @JsonBackReference("product-option")
     @ToString.Exclude
     private Product product;
 
@@ -29,7 +26,6 @@ public class Option {
 
 
     @OneToMany(mappedBy = "option", cascade = CascadeType.PERSIST)
-    @JsonManagedReference("selected-option-value-option")
     private final List<SelectedOptionValue> selectedOptionValues = new ArrayList<>();
 
     private final List<String> values = new ArrayList<>();

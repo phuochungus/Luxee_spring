@@ -1,7 +1,5 @@
 package me.phuochung.luxee.variant;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import me.phuochung.luxee.media.Media;
@@ -20,7 +18,6 @@ public class Variant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    @JsonBackReference("product-variant")
     @ToString.Exclude
     private Product product;
 
@@ -28,11 +25,9 @@ public class Variant {
     private Long productId;
 
     @OneToMany(mappedBy = "variant")
-    @JsonManagedReference("variant-media")
     private List<Media> media = new ArrayList<>();
 
     @OneToMany(mappedBy = "variant", cascade = CascadeType.MERGE)
-    @JsonManagedReference("selected-option-value-variant")
     private List<SelectedOptionValue> selectedOptionsValue = new ArrayList<>();
 
     private String description;
