@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.product.Product;
-import me.phuochung.luxee.selectedoptionvalue.SelectedOptionValue;
+import me.phuochung.luxee.variantoption.VariantOption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class Variant {
     private List<Media> media = new ArrayList<>();
 
     @OneToMany(mappedBy = "variant")
-    private List<SelectedOptionValue> selectedOptionsValue = new ArrayList<>();
+    private List<VariantOption> selectedOptionsValue = new ArrayList<>();
 
     private String description;
     private String SKU;

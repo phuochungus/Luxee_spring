@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 import me.phuochung.luxee.product.Product;
-import me.phuochung.luxee.selectedoptionvalue.SelectedOptionValue;
+import me.phuochung.luxee.variantoption.VariantOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class Option {
 
     @OneToMany(mappedBy = "option")
     @JsonIgnore
-    private final List<SelectedOptionValue> selectedOptionValues = new ArrayList<>();
+    private List<VariantOption> selectedOptionValues = new ArrayList<>();
 
-    private final List<String> values = new ArrayList<>();
+    private List<String> values = new ArrayList<>();
     private String name;
 }

@@ -54,8 +54,8 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    @Transactional
     public void updateVariants(Long productId, List<Variant> variants) {
+        System.out.println(variants.toString());
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Product not found"));
@@ -63,12 +63,15 @@ public class ProductService {
         product.setVariants(variants);
         variants.forEach((variant) -> variant.setProduct(product));
 
-        final List<Option> options = product.getOptions();
         for (Variant variant : variants) {
-            for (int i = 0; i < options.size(); i++) {
-                variant.getSelectedOptionsValue().get(i).setOption(options.get(i));
+            for (int i = 0; i < product.getOptions().size(); i++) {
+                variant.getSelectedOptionsValue().
+                        get(i)
+                        .setOption(product.getOptions().get(i));
             }
         }
+        System.out.println(variants.toString());
         variantRepository.saveAll(variants);
+
     }
 }

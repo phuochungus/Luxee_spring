@@ -1,4 +1,4 @@
-package me.phuochung.luxee.selectedoptionvalue;
+package me.phuochung.luxee.variantoption;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -8,7 +8,7 @@ import me.phuochung.luxee.variant.Variant;
 
 @Data
 @Entity
-public class SelectedOptionValue {
+public class VariantOption {
     @Id
     @Column(name = "option_id")
     private Long optionId;
