@@ -5,6 +5,7 @@ import me.phuochung.luxee.media.MediaService;
 import me.phuochung.luxee.media.Signature;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @Service
@@ -17,5 +18,11 @@ public class CloudinaryService implements MediaService {
         params.put("timestamp", timestamp);
         String signature = cloudinary.apiSignRequest(params, cloudinary.config.apiSecret);
         return new Signature(timestamp, signature);
+    }
+
+    public void deleteAsset(String publicId) throws IOException {
+        HashMap<String, String> options = new HashMap<>();
+        options.put("invalidate", "true");
+        cloudinary.uploader().destroy(publicId, options);
     }
 }

@@ -15,4 +15,5 @@ public class MediaController {
     public Signature getSignature() {
         return mediaService.generateUploadSignature();
     }
+
 }
