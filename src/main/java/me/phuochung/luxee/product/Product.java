@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

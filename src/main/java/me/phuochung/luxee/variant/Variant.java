@@ -3,6 +3,7 @@ package me.phuochung.luxee.variant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.product.Product;
@@ -20,6 +21,7 @@ public class Variant {
 
     @ManyToOne()
     @JoinColumn(name = "product_id")
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
     private Product product;
@@ -30,8 +32,8 @@ public class Variant {
     @OneToMany(mappedBy = "variant")
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(mappedBy = "variant")
-    private List<VariantOption> selectedOptionsValue = new ArrayList<>();
+    @OneToMany(mappedBy = "variant", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<VariantOption> variantOptions = new ArrayList<>();
 
     private String description;
     private String SKU;

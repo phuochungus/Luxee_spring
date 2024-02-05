@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import me.phuochung.luxee.product.Product;
 import me.phuochung.luxee.variant.Variant;
 
@@ -16,11 +18,15 @@ public class Media {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JsonIgnore
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "variant_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JsonIgnore
     private Variant variant;
 

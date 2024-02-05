@@ -3,9 +3,11 @@ package me.phuochung.luxee.option;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import me.phuochung.luxee.product.Product;
 import me.phuochung.luxee.variantoption.VariantOption;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,18 +16,21 @@ import java.util.List;
 @Entity
 public class Option {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
+    @ManyToOne()
+    @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "option")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JsonIgnore
-    private List<VariantOption> selectedOptionValues = new ArrayList<>();
+    @OneToMany(mappedBy = "option", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<VariantOption> variantOptions = new ArrayList<>();
 
     private List<String> values = new ArrayList<>();
     private String name;

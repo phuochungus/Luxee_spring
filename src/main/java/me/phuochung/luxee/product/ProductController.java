@@ -44,6 +44,7 @@ public class ProductController {
     @PutMapping("/{id}/variants")
     public void addVariants(@PathVariable Long id,
                             @RequestBody List<@Valid Variant> variants) {
+        System.out.println(variants.toString());
         productService.updateVariants(id, variants);
     }
 

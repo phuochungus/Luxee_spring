@@ -6,6 +6,7 @@ import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;
 import me.phuochung.luxee.variant.VariantRepository;
+import me.phuochung.luxee.variantoption.VariantOption;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -63,15 +64,27 @@ public class ProductService {
         product.setVariants(variants);
         variants.forEach((variant) -> variant.setProduct(product));
 
-        for (Variant variant : variants) {
-            for (int i = 0; i < product.getOptions().size(); i++) {
-                variant.getSelectedOptionsValue().
-                        get(i)
-                        .setOption(product.getOptions().get(i));
-            }
-        }
-        System.out.println(variants.toString());
-        variantRepository.saveAll(variants);
 
+        List<Option> productOptions = product.getOptions();
+        productOptions.forEach((option) -> {
+            System.out.println("product's option[0] hash: " + option.hashCode());
+        });
+
+        for (Variant variant : variants) {
+            for (int j = 0; j < productOptions.size(); j++) {
+                VariantOption variantOption = variant.getVariantOptions().get(j);
+                variantOption.setOption(productOptions.get(j));
+                productOptions.get(j).getVariantOptions().add(variantOption);
+                variantOption.setVariant(variant);
+            }
+//            System.out.println(variant.getVariantOptions().toString());
+//            System.out.println("variantOptions hash: " + variant.getVariantOptions()
+//            .hashCode());
+//            System.out.println("variantOptions[0] hash:" + variant.getVariantOptions
+//            ().get(0).hashCode());
+//            System.out.println("variantOptions[0].option hash:" + variant
+//            .getVariantOptions().get(0).getOption().hashCode());
+            variantRepository.save(variant);
+        }
     }
 }
