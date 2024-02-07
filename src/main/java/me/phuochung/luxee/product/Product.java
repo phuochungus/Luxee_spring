@@ -3,6 +3,7 @@ package me.phuochung.luxee.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NonNull;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;
@@ -40,8 +41,8 @@ public class Product {
 
     private String SKU;
     private String barcode;
+    private String description;
     private Long unavailable;
     private Long available;
     private Long committed;
-    private String description;
 }

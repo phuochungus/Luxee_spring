@@ -29,4 +29,9 @@ public class VariantOption {
 
     @Column(nullable = false)
     private Integer valueIndex;
+
+    @Transient
+    public String getValue() {
+        return option.getValues().get(valueIndex);
+    }
 }

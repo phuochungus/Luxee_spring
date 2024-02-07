@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.variant.Variant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,11 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/products")
 public class ProductController {
-    private final ProductService productService;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping()
     public List<Product> getAllProducts() {
@@ -37,13 +39,13 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/media")
-    public void addMedia(@PathVariable Long id, @RequestBody List<@Valid Media> media) {
+    public void addMedia(@PathVariable Long id, @RequestBody @Valid List<Media> media) {
         productService.updateMedia(id, media);
     }
 
     @PutMapping("/{id}/variants")
     public void addVariants(@PathVariable Long id,
-                            @RequestBody List<@Valid Variant> variants) {
+                            @RequestBody @Valid List<Variant> variants) {
         System.out.println(variants.toString());
         productService.updateVariants(id, variants);
     }

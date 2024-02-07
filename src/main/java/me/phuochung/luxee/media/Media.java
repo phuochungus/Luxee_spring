@@ -3,13 +3,13 @@ package me.phuochung.luxee.media;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import me.phuochung.luxee.product.Product;
 import me.phuochung.luxee.variant.Variant;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Media {
     @Id
@@ -37,7 +37,7 @@ public class Media {
     private String publicId;
     private MediaType mediaType = MediaType.IMAGE;
 
-    enum MediaType {
+    public enum MediaType {
         IMAGE, VIDEO
     }
 }

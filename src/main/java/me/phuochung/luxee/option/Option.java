@@ -2,9 +2,8 @@ package me.phuochung.luxee.option;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import me.phuochung.luxee.product.Product;
 import me.phuochung.luxee.variantoption.VariantOption;
 
@@ -13,6 +12,8 @@ import java.util.List;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Option {
     @Id
@@ -33,5 +34,7 @@ public class Option {
     private List<VariantOption> variantOptions = new ArrayList<>();
 
     private List<String> values = new ArrayList<>();
+
+    @NotBlank(message = "\"name\" is required")
     private String name;
 }
