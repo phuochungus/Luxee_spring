@@ -26,9 +26,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product getProduct(@PathVariable Long id) {
-        return productService
-                .getProduct(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+        return productService.getProduct(id).orElseThrow(
+                () -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
                         "Product not found"));
     }
 
@@ -38,7 +38,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/media")
-    public void addMedia(@PathVariable Long id, @RequestBody @Valid List<Media> media) {
+    public void addMedia(@PathVariable Long id,
+                         @RequestBody @Valid List<Media> media) {
         productService.updateMedia(id, media);
     }
 

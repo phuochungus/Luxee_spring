@@ -32,7 +32,8 @@ public class Variant {
     @OneToMany(mappedBy = "variant")
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(mappedBy = "variant", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "variant", cascade = { CascadeType.MERGE,
+            CascadeType.PERSIST })
     private List<VariantOption> variantOptions = new ArrayList<>();
 
     private String description;

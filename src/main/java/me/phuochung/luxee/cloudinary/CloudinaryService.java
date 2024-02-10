@@ -16,7 +16,8 @@ public class CloudinaryService implements MediaService {
         long timestamp = System.currentTimeMillis() / 1000;
         HashMap<String, Object> params = new HashMap<>();
         params.put("timestamp", timestamp);
-        String signature = cloudinary.apiSignRequest(params, cloudinary.config.apiSecret);
+        String signature = cloudinary.apiSignRequest(params,
+                                                     cloudinary.config.apiSecret);
         return new Signature(timestamp, signature);
     }
 

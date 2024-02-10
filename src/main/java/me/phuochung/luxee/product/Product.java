@@ -10,7 +10,6 @@ import me.phuochung.luxee.variant.Variant;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Data
 @Entity
 public class Product {

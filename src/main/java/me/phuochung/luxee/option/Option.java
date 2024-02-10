@@ -10,7 +10,6 @@ import me.phuochung.luxee.variantoption.VariantOption;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +29,8 @@ public class Option {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
-    @OneToMany(mappedBy = "option", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "option", cascade = {CascadeType.MERGE,
+            CascadeType.PERSIST})
     private List<VariantOption> variantOptions = new ArrayList<>();
 
     private List<String> values = new ArrayList<>();

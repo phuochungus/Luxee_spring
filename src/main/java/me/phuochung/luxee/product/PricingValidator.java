@@ -9,7 +9,8 @@ import java.util.List;
 @Component
 public class PricingValidator {
 
-    public boolean isValid(@NotNull List<Option> options, Double price) {
-        return options.isEmpty() ^ price == null;
+    public boolean isValid(@NotNull List<Option> options,
+                           Double price) {
+        return options.isEmpty() ^ price==null;
     }
 }

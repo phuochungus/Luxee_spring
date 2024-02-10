@@ -34,24 +34,23 @@ public class ProductService {
     }
 
     @Transactional
-    public Product createProduct(Product product) throws ResponseStatusException {
-        if (!pricingValidator.isValid(product.getOptions(), product.getPrice())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "Invalid price and options, either price is null or options must be" +
-                            " empty and the other must not be empty.");
+    public Product createProduct(Product product)
+            throws ResponseStatusException {
+        if (!pricingValidator.isValid(product.getOptions(),
+                                      product.getPrice())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Invalid price and options, either price is null or " +
+                            "options must be empty and the other must not be " +
+                            "empty.");
         }
-        List<Option> options =
-                product.getOptions()
-                        .stream()
-                        .peek((option) -> option.setProduct(product))
-                        .toList();
+        List<Option> options = product.getOptions().stream()
+                                      .peek((option) -> option.setProduct(
+                                              product)).toList();
         product.setOptions(options);
 
-        List<Media> media =
-                product.getMedia()
-                        .stream()
-                        .peek((m) -> m.setProduct(product))
-                        .toList();
+        List<Media> media = product.getMedia().stream()
+                                   .peek((m) -> m.setProduct(product)).toList();
         product.setMedia(media);
 
         return productRepository.save(product);
@@ -59,30 +58,30 @@ public class ProductService {
 
     @Transactional
     public void updateMedia(Long id, List<Media> media) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Product not found"));
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                  "Product not found"));
         product.setMedia(media);
         media.forEach((m) -> m.setProduct(product));
         productRepository.save(product);
     }
 
     public void updateVariants(Long productId, List<Variant> variants) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Product not found"));
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                  "Product not found"));
 
         product.setVariants(variants);
         variants.forEach((variant) -> variant.setProduct(product));
 
         List<Option> productOptions = product.getOptions();
-        productOptions.forEach((option) -> {
-            System.out.println("product's option[0] hash: " + option.hashCode());
-        });
+        productOptions.forEach((option) -> System.out.println(
+                "product's option[0] hash: " + option.hashCode()));
 
         for (Variant variant : variants) {
             for (int j = 0; j < productOptions.size(); j++) {
-                VariantOption variantOption = variant.getVariantOptions().get(j);
+                VariantOption variantOption = variant.getVariantOptions()
+                                                     .get(j);
                 variantOption.setOption(productOptions.get(j));
                 productOptions.get(j).getVariantOptions().add(variantOption);
                 variantOption.setVariant(variant);

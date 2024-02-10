@@ -25,24 +25,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     private final List<Option> testOptions = List.of(
-            new Option(
-                    null,
-                    null,               
-                    null,
-                    List.of("Red", "Blue"),
-                    "Color"
-            ),
-            new Option(
-                    null,
-                    null,
-                    null,
-                    List.of("S", "M"),
-                    "Size"
-            ));
+            new Option(null, null, null, List.of("Red", "Blue"),
+                    "Color"),
+            new Option(null, null, null, List.of("S", "M"), "Size"));
     private final List<Media> testMedia = List.of(
-            new Media(null, null, null, "test_url1", "test_public_id1", Media.MediaType.IMAGE),
-            new Media(null, null, null, "test_url2", "test_public_id2", Media.MediaType.IMAGE)
-    );
+            new Media(null, null, null, "test_url1",
+                    "test_public_id1",
+                    Media.MediaType.IMAGE),
+            new Media(null, null, null, "test_url2",
+                    "test_public_id2",
+                    Media.MediaType.IMAGE));
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -57,28 +49,39 @@ class ProductControllerTest {
         testProduct.setTitle("shouldCreateProductTest");
         testProduct.setOptions(testOptions);
 
-        mockMvc
-                .perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testProduct)))
-                .andExpect(status().isOk())
-                .andExpect(content().string(matchesPattern("\\d+")))
-                .andDo(result -> {
-                    testProduct.setId(Long.parseLong(result.getResponse().getContentAsString()));
-                });
+        mockMvc.perform(post("/products")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(objectMapper.writeValueAsString(testProduct)))
+               .andExpect(status().isOk())
+               .andExpect(content().string(matchesPattern("\\d+")))
+               .andDo(result -> testProduct.setId(Long.parseLong(
+                       result.getResponse()
+                             .getContentAsString())));
 
-        mockMvc
-                .perform(get("/products/" + testProduct.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$..title").value(testProduct.getTitle()))
-                .andExpect(jsonPath("$..options[0].name").value(testOptions.get(0).getName()))
-                .andExpect(jsonPath("$..options[1].name").value(testOptions.get(1).getName()))
-                .andExpect(jsonPath("$..options[0].values[0]").value(testOptions.get(0).getValues().get(0)))
-                .andExpect(jsonPath("$..options[0].values[1]").value(testOptions.get(0).getValues().get(1)))
-                .andExpect(jsonPath("$..options[1].values[0]").value(testOptions.get(1).getValues().get(0)))
-                .andExpect(jsonPath("$..options[1].values[1]").value(testOptions.get(1).getValues().get(1)))
-                .andExpect(jsonPath("$.id").value(testProduct.getId().intValue()));
-
+        mockMvc.perform(get("/products/" + testProduct.getId()
+                                                      .toString()))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$..title").value(testProduct.getTitle()))
+               .andExpectAll(
+                       jsonPath("$..options[0].name")
+                               .value(testOptions.get(0).getName()),
+                       jsonPath("$..options[1].name")
+                               .value(testOptions.get(1).getName()),
+                       jsonPath("$..options[0].values[0]")
+                               .value(testOptions.get(0).getValues()
+                                                 .get(0)),
+                       jsonPath("$..options[0].values[1]")
+                               .value(testOptions.get(0).getValues()
+                                                 .get(1)),
+                       jsonPath("$..options[1].values[0]")
+                               .value(testOptions.get(1).getValues()
+                                                 .get(0)),
+                       jsonPath("$..options[1].values[1]")
+                               .value(testOptions.get(1).getValues()
+                                                 .get(1)),
+                       jsonPath("$.id")
+                               .value(testProduct.getId().intValue())
+               );
 
     }
 
@@ -90,20 +93,19 @@ class ProductControllerTest {
         testProduct.setPrice(100.0);
         testProduct.setOptions(testOptions);
 
-        mockMvc
-                .perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new Product())))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                new Product())))
+               .andExpect(status().isBadRequest());
     }
 
     @Test
     @Order(2)
     void shouldGetAllProductTest() throws Exception {
-        mockMvc
-                .perform(get("/products"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+        mockMvc.perform(get("/products"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$").isArray());
     }
 
     @Test
@@ -114,27 +116,27 @@ class ProductControllerTest {
         testProduct.setPrice(100.0);
         testProduct.setMedia(testMedia);
 
-        mockMvc
-                .perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testProduct)))
-                .andExpect(status().isOk())
-                .andExpect(content().string(matchesPattern("\\d+")))
-                .andDo(result -> {
-                    testProduct.setId(Long.parseLong(result.getResponse().getContentAsString()));
-                });
+        mockMvc.perform(post("/products")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(objectMapper.writeValueAsString(testProduct)))
+               .andExpect(status().isOk())
+               .andExpect(content().string(matchesPattern("\\d+")))
+               .andDo(result -> testProduct
+                       .setId(Long.parseLong(result.getResponse()
+                                                   .getContentAsString())));
 
-        mockMvc
-                .perform(put("/products/" + testProduct.getId() + "/media")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testMedia)))
-                .andExpect(status().isOk());
+        mockMvc.perform(put("/products/" + testProduct.getId() +
+                       "/media")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(objectMapper.writeValueAsString(testMedia)))
+               .andExpect(status().isOk());
 
-        mockMvc
-                .perform(get("/products/" + testProduct.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$..media[0].url").value(testMedia.get(0).getUrl()))
-                .andExpect(jsonPath("$..media[1].url").value(testMedia.get(1).getUrl()));
+        mockMvc.perform(get("/products/" + testProduct.getId()))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$..media[0].url").value(testMedia.get(0)
+                                                                     .getUrl()))
+               .andExpect(jsonPath("$..media[1].url").value(testMedia.get(1)
+                                                                     .getUrl()));
 
     }
 
