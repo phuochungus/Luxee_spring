@@ -1,7 +1,6 @@
 package me.phuochung.luxee.product;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.variant.Variant;
 import org.springframework.beans.factory.annotation.Autowired;

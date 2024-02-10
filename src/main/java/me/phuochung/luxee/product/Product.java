@@ -3,7 +3,6 @@ package me.phuochung.luxee.product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.NonNull;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;

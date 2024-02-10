@@ -27,7 +27,7 @@ class ProductControllerTest {
     private final List<Option> testOptions = List.of(
             new Option(
                     null,
-                    null,
+                    null,               
                     null,
                     List.of("Red", "Blue"),
                     "Color"
