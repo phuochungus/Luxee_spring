@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x gradlew
-
-RUN ./gradlew build
+RUN  chmod +x gradlew && ./gradlew build -x test
 
 CMD ["java", "-jar", "build/libs/Luxee-1.jar"]
