@@ -1,0 +1,58 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: 
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: luxee
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
+    - name: Build with Gradle Wrapper
+      run: |
+        chmod +x gradlew
+        ./gradlew build --scan
+      env:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/luxee
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: password
+      
+  dependency-submission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: chmod
+      run: chmod +x gradlew
+    - name: Generate and submit dependency graph
+      uses: gradle/actions/dependency-submission@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
