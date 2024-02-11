@@ -14,7 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Random;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -25,16 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     private final List<Option> testOptions = List.of(
-            new Option(null, null, null, List.of("Red", "Blue"),
-                    "Color"),
+            new Option(null, null, null, List.of("Red", "Blue"), "Color"),
             new Option(null, null, null, List.of("S", "M"), "Size"));
     private final List<Media> testMedia = List.of(
-            new Media(null, null, null, "test_url1",
-                    "test_public_id1",
-                    Media.MediaType.IMAGE),
-            new Media(null, null, null, "test_url2",
-                    "test_public_id2",
-                    Media.MediaType.IMAGE));
+            new Media(null, null, null, "test_url1", "test_public_id1",
+                      Media.MediaType.IMAGE),
+            new Media(null, null, null, "test_url2", "test_public_id2",
+                      Media.MediaType.IMAGE));
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -49,39 +48,32 @@ class ProductControllerTest {
         testProduct.setTitle("shouldCreateProductTest");
         testProduct.setOptions(testOptions);
 
-        mockMvc.perform(post("/products")
-                       .contentType(MediaType.APPLICATION_JSON)
-                       .content(objectMapper.writeValueAsString(testProduct)))
+        mockMvc.perform(
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
                .andExpect(status().isOk())
                .andExpect(content().string(matchesPattern("\\d+")))
                .andDo(result -> testProduct.setId(Long.parseLong(
-                       result.getResponse()
-                             .getContentAsString())));
+                       result.getResponse().getContentAsString())));
 
-        mockMvc.perform(get("/products/" + testProduct.getId()
-                                                      .toString()))
+        mockMvc.perform(get("/products/" + testProduct.getId().toString()))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$..title").value(testProduct.getTitle()))
-               .andExpectAll(
-                       jsonPath("$..options[0].name")
-                               .value(testOptions.get(0).getName()),
-                       jsonPath("$..options[1].name")
-                               .value(testOptions.get(1).getName()),
-                       jsonPath("$..options[0].values[0]")
-                               .value(testOptions.get(0).getValues()
-                                                 .get(0)),
-                       jsonPath("$..options[0].values[1]")
-                               .value(testOptions.get(0).getValues()
-                                                 .get(1)),
-                       jsonPath("$..options[1].values[0]")
-                               .value(testOptions.get(1).getValues()
-                                                 .get(0)),
-                       jsonPath("$..options[1].values[1]")
-                               .value(testOptions.get(1).getValues()
-                                                 .get(1)),
-                       jsonPath("$.id")
-                               .value(testProduct.getId().intValue())
-               );
+               .andExpectAll(jsonPath("$..options[0].name").value(
+                                     testOptions.get(0).getName()),
+                             jsonPath("$..options[1].name").value(
+                                     testOptions.get(1).getName()),
+                             jsonPath("$..options[0].values[0]").value(
+                                     testOptions.get(0).getValues().get(0)),
+                             jsonPath("$..options[0].values[1]").value(
+                                     testOptions.get(0).getValues().get(1)),
+                             jsonPath("$..options[1].values[0]").value(
+                                     testOptions.get(1).getValues().get(0)),
+                             jsonPath("$..options[1].values[1]").value(
+                                     testOptions.get(1).getValues().get(1)),
+                             jsonPath("$.id").value(
+                                     testProduct.getId().intValue()));
 
     }
 
@@ -116,32 +108,85 @@ class ProductControllerTest {
         testProduct.setPrice(100.0);
         testProduct.setMedia(testMedia);
 
-        mockMvc.perform(post("/products")
-                       .contentType(MediaType.APPLICATION_JSON)
-                       .content(objectMapper.writeValueAsString(testProduct)))
+        mockMvc.perform(
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
                .andExpect(status().isOk())
                .andExpect(content().string(matchesPattern("\\d+")))
-               .andDo(result -> testProduct
-                       .setId(Long.parseLong(result.getResponse()
-                                                   .getContentAsString())));
+               .andDo(result -> testProduct.setId(Long.parseLong(
+                       result.getResponse().getContentAsString())));
 
-        mockMvc.perform(put("/products/" + testProduct.getId() +
-                       "/media")
-                       .contentType(MediaType.APPLICATION_JSON)
-                       .content(objectMapper.writeValueAsString(testMedia)))
+        mockMvc.perform(
+                       put("/products/" + testProduct.getId() + "/media")
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(objectMapper.writeValueAsString(testMedia)))
                .andExpect(status().isOk());
 
         mockMvc.perform(get("/products/" + testProduct.getId()))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$..media[0].url").value(testMedia.get(0)
-                                                                     .getUrl()))
-               .andExpect(jsonPath("$..media[1].url").value(testMedia.get(1)
-                                                                     .getUrl()));
+               .andExpect(jsonPath("$..media[0].url").value(
+                       testMedia.get(0).getUrl()))
+               .andExpect(jsonPath("$..media[1].url").value(
+                       testMedia.get(1).getUrl()));
 
     }
 
     @Test
     @Order(4)
-    void addVariants() {
+    void shouldReplaceMedia() throws Exception {
+        Product testProduct = new Product();
+        testProduct.setTitle("shouldCreateProductTest");
+        double randomPrice = new Random().nextDouble() * 100;
+        testProduct.setPrice(randomPrice);
+        testProduct.setMedia(testMedia);
+
+        mockMvc.perform(
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
+               .andExpect(status().isOk())
+               .andExpect(content().string(matchesPattern("\\d+")))
+               .andDo(result -> testProduct.setId(Long.parseLong(
+                       result.getResponse().getContentAsString())));
+
+        mockMvc.perform(
+                       get("/products/" + testProduct.getId()))
+               .andExpectAll(
+                       status().isOk(),
+                       jsonPath("$.price").value(randomPrice),
+                       jsonPath("$.media[*].url").value(
+                               containsInAnyOrder(
+                                       testMedia.stream()
+                                                .map(Media::getUrl)
+                                                .toArray()
+                               )
+                       )
+               );
+
+        List<Media> newMedia = List.of(
+                new Media(null, null, null, "new_url1", "new_public_id1",
+                          Media.MediaType.IMAGE),
+                new Media(null, null, null, "new_url2", "new_public_id2",
+                          Media.MediaType.IMAGE));
+
+        mockMvc.perform(
+                       put("/products/" + testProduct.getId() + "/media")
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(objectMapper.writeValueAsString(newMedia)))
+               .andExpect(status().isOk());
+
+        mockMvc.perform(
+                       get("/products/" + testProduct.getId()))
+               .andExpectAll(
+                       status().isOk(),
+                       jsonPath("$.media[*].url").value(
+                               containsInAnyOrder(
+                                       newMedia.stream()
+                                               .map(Media::getUrl)
+                                               .toArray()
+                               )
+                       )
+               );
     }
 }

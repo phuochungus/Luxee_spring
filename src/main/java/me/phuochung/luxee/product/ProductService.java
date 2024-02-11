@@ -61,8 +61,10 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                   "Product not found"));
-        product.setMedia(media);
+
         media.forEach((m) -> m.setProduct(product));
+        if (!product.getMedia().isEmpty()) product.getMedia().clear();
+        product.getMedia().addAll(media);
         productRepository.save(product);
     }
 
