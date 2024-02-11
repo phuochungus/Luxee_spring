@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta content="text/html;charset=windows-1252" http-equiv="Content-Type">
+    <title>Coverage Report > Variant</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script src="../../js/highlight.min.js" type="text/javascript"></script>
+    <script src="../../js/highlightjs-line-numbers.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">me.phuochung.luxee.variant</a>
+    </div>
+
+    <h1>Coverage Summary for Class: Variant (me.phuochung.luxee.variant)</h1>
+
+    <table class="coverageStats">
+
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">Variant</td>
+            <td class="coverageStat">
+  <span class="percent">
+    6.7%
+  </span>
+                <span class="absValue">
+    (1/15)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    17.6%
+  </span>
+                <span class="absValue">
+    (3/17)
+  </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="name">Variant$HibernateInstantiator$7QyB7n3S</td>
+        </tr>
+        <tr>
+            <td class="name">Variant$HibernateProxy$VgVVm9hO</td>
+        </tr>
+        <tr>
+            <td class="name"><strong>Total</strong></td>
+            <td class="coverageStat">
+  <span class="percent">
+    6.7%
+  </span>
+                <span class="absValue">
+    (1/15)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    17.6%
+  </span>
+                <span class="absValue">
+    (3/17)
+  </span>
+            </td>
+        </tr>
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package me.phuochung.luxee.variant;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.annotation.JsonIgnore;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.EqualsAndHashCode;
+&nbsp;import lombok.ToString;
+&nbsp;import me.phuochung.luxee.media.Media;
+&nbsp;import me.phuochung.luxee.product.Product;
+&nbsp;import me.phuochung.luxee.variantoptionvalue.VariantOptionValue;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="fc">&nbsp;@Data</b>
+&nbsp;@Entity
+&nbsp;public class Variant {
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.AUTO)
+<b class="nc">&nbsp;    private Long id;</b>
+&nbsp;
+&nbsp;    @ManyToOne()
+&nbsp;    @JoinColumn(name = &quot;product_id&quot;)
+&nbsp;    @EqualsAndHashCode.Exclude
+&nbsp;    @ToString.Exclude
+&nbsp;    @JsonIgnore
+<b class="nc">&nbsp;    private Product product;</b>
+&nbsp;
+&nbsp;    @Column(name = &quot;product_id&quot;, updatable = false, insertable = false)
+<b class="nc">&nbsp;    private Long productId;</b>
+&nbsp;
+<b class="fc">&nbsp;    @OneToMany(mappedBy = &quot;variant&quot;)</b>
+<b class="nc">&nbsp;    private List&lt;Media&gt; media = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;    @OneToMany(mappedBy = &quot;variant&quot;, cascade = { CascadeType.MERGE,</b>
+&nbsp;            CascadeType.PERSIST })
+<b class="nc">&nbsp;    private List&lt;VariantOption&gt; variantOptions = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="nc">&nbsp;    private String description;</b>
+<b class="nc">&nbsp;    private String SKU;</b>
+<b class="nc">&nbsp;    private String barcode;</b>
+<b class="nc">&nbsp;    private Double price;</b>
+<b class="nc">&nbsp;    private Double compareAtPrice;</b>
+<b class="nc">&nbsp;    private Double costPerItem;</b>
+<b class="nc">&nbsp;    private Long unavailable;</b>
+<b class="nc">&nbsp;    private Long committed;</b>
+<b class="nc">&nbsp;    private Long available;</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function() {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+          hljs.highlightAll()
+          hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2024-02-11 23:06</div>
+</div>
+</body>
+</html>

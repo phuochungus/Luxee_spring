@@ -1,0 +1,166 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ProductController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">me.phuochung.luxee.product</a>
+</div>
+
+<h1>Coverage Summary for Class: ProductController (me.phuochung.luxee.product)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProductController</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ProductController$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    71.4%
+  </span>
+  <span class="absValue">
+    (5/7)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package me.phuochung.luxee.product;
+&nbsp;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import me.phuochung.luxee.media.Media;
+&nbsp;import me.phuochung.luxee.variant.Variant;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.validation.annotation.Validated;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.springframework.web.server.ResponseStatusException;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Validated
+&nbsp;@RestController
+&nbsp;@RequestMapping(&quot;/products&quot;)
+<b class="fc">&nbsp;public class ProductController {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private ProductService productService;
+&nbsp;
+&nbsp;    @GetMapping()
+&nbsp;    public List&lt;Product&gt; getAllProducts() {
+<b class="fc">&nbsp;        return productService.getAllProducts();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/{id}&quot;)
+&nbsp;    public Product getProduct(@PathVariable Long id) {
+<b class="fc">&nbsp;        return productService.getProduct(id).orElseThrow(</b>
+<b class="nc">&nbsp;                () -&gt; new ResponseStatusException(</b>
+&nbsp;                        HttpStatus.NOT_FOUND,
+&nbsp;                        &quot;Product not found&quot;));
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping()
+&nbsp;    public Long createProduct(@Valid @RequestBody Product product) {
+<b class="fc">&nbsp;        return productService.createProduct(product).getId();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}/media&quot;)
+&nbsp;    public void updateMedia(@PathVariable Long id,
+&nbsp;                            @RequestBody @Valid List&lt;Media&gt; media) {
+<b class="fc">&nbsp;        productService.updateMedia(id, media);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;/{id}/variants&quot;)
+&nbsp;    public void addVariants(@PathVariable Long id,
+&nbsp;                            @RequestBody @Valid List&lt;Variant&gt; variants) {
+<b class="nc">&nbsp;        productService.updateVariants(id, variants);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-02-11 23:06</div>
+</div>
+</body>
+</html>

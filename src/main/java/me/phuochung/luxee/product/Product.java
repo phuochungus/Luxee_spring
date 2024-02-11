@@ -17,14 +17,13 @@ public class Product {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<Variant> variants = new ArrayList<>();
 
     @NotBlank(message = "\"title\" is required")

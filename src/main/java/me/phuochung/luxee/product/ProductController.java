@@ -38,15 +38,14 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/media")
-    public void addMedia(@PathVariable Long id,
-                         @RequestBody @Valid List<Media> media) {
+    public void updateMedia(@PathVariable Long id,
+                            @RequestBody @Valid List<Media> media) {
         productService.updateMedia(id, media);
     }
 
     @PutMapping("/{id}/variants")
     public void addVariants(@PathVariable Long id,
                             @RequestBody @Valid List<Variant> variants) {
-        System.out.println(variants.toString());
         productService.updateVariants(id, variants);
     }
 

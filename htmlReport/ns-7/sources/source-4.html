@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+    <meta content="text/html;charset=windows-1252" http-equiv="Content-Type">
+    <title>Coverage Report > ProductService</title>
+    <style type="text/css">
+        @import "../../css/coverage.css";
+        @import "../../css/idea.min.css";
+    </style>
+    <script src="../../js/highlight.min.js" type="text/javascript"></script>
+    <script src="../../js/highlightjs-line-numbers.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="content">
+    <div class="breadCrumbs">
+        Current scope: <a href="../../index.html">all classes</a>
+        <span class="separator">|</span>
+        <a href="../index.html">me.phuochung.luxee.product</a>
+    </div>
+
+    <h1>Coverage Summary for Class: ProductService (me.phuochung.luxee.product)</h1>
+
+    <table class="coverageStats">
+
+        <tr>
+            <th class="name">Class</th>
+            <th class="coverageStat
+">
+                Method, %
+            </th>
+            <th class="coverageStat
+">
+                Line, %
+            </th>
+        </tr>
+        <tr>
+            <td class="name">ProductService</td>
+            <td class="coverageStat">
+  <span class="percent">
+    55.6%
+  </span>
+                <span class="absValue">
+    (5/9)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    46.9%
+  </span>
+                <span class="absValue">
+    (15/32)
+  </span>
+            </td>
+        </tr>
+        <tr>
+            <td class="name">ProductService$$SpringCGLIB$$0</td>
+        </tr>
+        <tr>
+            <td class="name"><strong>Total</strong></td>
+            <td class="coverageStat">
+  <span class="percent">
+    55.6%
+  </span>
+                <span class="absValue">
+    (5/9)
+  </span>
+            </td>
+            <td class="coverageStat">
+  <span class="percent">
+    46.9%
+  </span>
+                <span class="absValue">
+    (15/32)
+  </span>
+            </td>
+        </tr>
+    </table>
+
+    <br/>
+    <br/>
+
+
+    <pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package me.phuochung.luxee.product;
+&nbsp;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import me.phuochung.luxee.media.Media;
+&nbsp;import me.phuochung.luxee.option.Option;
+&nbsp;import me.phuochung.luxee.variant.Variant;
+&nbsp;import me.phuochung.luxee.variant.VariantRepository;
+&nbsp;import me.phuochung.luxee.variantoptionvalue.VariantOptionValue;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.web.server.ResponseStatusException;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class ProductService {</b>
+&nbsp;    @Autowired
+&nbsp;    private ProductRepository productRepository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PricingValidator pricingValidator;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private VariantRepository variantRepository;
+&nbsp;
+&nbsp;    public List&lt;Product&gt; getAllProducts() {
+<b class="fc">&nbsp;        return productRepository.findAll();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Optional&lt;Product&gt; getProduct(Long id) {
+<b class="fc">&nbsp;        return productRepository.findById(id);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public Product createProduct(Product product)
+&nbsp;            throws ResponseStatusException {
+<b class="fc">&nbsp;        if (!pricingValidator.isValid(product.getOptions(),</b>
+<b class="fc">&nbsp;                                      product.getPrice())) {</b>
+<b class="fc">&nbsp;            throw new ResponseStatusException(</b>
+&nbsp;                    HttpStatus.BAD_REQUEST,
+&nbsp;                    &quot;Invalid price and options, either price is null or &quot; +
+&nbsp;                            &quot;options must be empty and the other must not be &quot; +
+&nbsp;                            &quot;empty.&quot;);
+&nbsp;        }
+<b class="fc">&nbsp;        product.getOptions().forEach((o) -&gt; o.setProduct(product));</b>
+<b class="fc">&nbsp;        product.getVariants().forEach((v) -&gt; v.setProduct(product));</b>
+<b class="fc">&nbsp;        product.getMedia().forEach((m) -&gt; m.setProduct(product));</b>
+<b class="fc">&nbsp;        return productRepository.save(product);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public void updateMedia(Long id, List&lt;Media&gt; media) {
+<b class="fc">&nbsp;        Product product = productRepository.findById(id).orElseThrow(</b>
+<b class="nc">&nbsp;                () -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</b>
+&nbsp;                                                  &quot;Product not found&quot;));
+&nbsp;
+<b class="fc">&nbsp;        media.forEach((m) -&gt; m.setProduct(product));</b>
+<b class="fc">&nbsp;        if (!product.getMedia().isEmpty()) product.getMedia().clear();</b>
+<b class="fc">&nbsp;        product.getMedia().addAll(media);</b>
+<b class="fc">&nbsp;        productRepository.save(product);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void updateVariants(Long productId, List&lt;Variant&gt; variants) {
+<b class="nc">&nbsp;        Product product = productRepository.findById(productId).orElseThrow(</b>
+<b class="nc">&nbsp;                () -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND,</b>
+&nbsp;                                                  &quot;Product not found&quot;));
+&nbsp;
+<b class="nc">&nbsp;        product.setVariants(variants);</b>
+<b class="nc">&nbsp;        variants.forEach((variant) -&gt; variant.setProduct(product));</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;Option&gt; productOptions = product.getOptions();</b>
+<b class="nc">&nbsp;        productOptions.forEach((option) -&gt; System.out.println(</b>
+<b class="nc">&nbsp;                &quot;product&#39;s option[0] hash: &quot; + option.hashCode()));</b>
+&nbsp;
+<b class="nc">&nbsp;        for (Variant variant : variants) {</b>
+<b class="nc">&nbsp;            for (int j = 0; j &lt; productOptions.size(); j++) {</b>
+<b class="nc">&nbsp;                VariantOption variantOption = variant.getVariantOptions()</b>
+<b class="nc">&nbsp;                                                     .get(j);</b>
+<b class="nc">&nbsp;                variantOption.setOption(productOptions.get(j));</b>
+<b class="nc">&nbsp;                productOptions.get(j).getVariantOptions().add(variantOption);</b>
+<b class="nc">&nbsp;                variantOption.setVariant(variant);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        variantRepository.saveAll(variants);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+    (function() {
+        var msie = false, msie9 = false;
+        /*@cc_on
+          msie = true;
+          @if (@_jscript_version >= 9)
+            msie9 = true;
+          @end
+        @*/
+
+        if (!msie || msie && msie9) {
+          hljs.highlightAll()
+          hljs.initLineNumbersOnLoad();
+        }
+    })();
+</script>
+
+<div class="footer">
+
+    <div style="float:right;">generated on 2024-02-11 23:06</div>
+</div>
+</body>
+</html>

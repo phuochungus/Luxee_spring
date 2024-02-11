@@ -2,17 +2,19 @@ package me.phuochung.luxee.variant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.product.Product;
-import me.phuochung.luxee.variantoption.VariantOption;
+import me.phuochung.luxee.variantoptionvalue.VariantOptionValue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 @Entity
 public class Variant {
     @Id
@@ -29,12 +31,12 @@ public class Variant {
     @Column(name = "product_id", updatable = false, insertable = false)
     private Long productId;
 
-    @OneToMany(mappedBy = "variant")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(mappedBy = "variant", cascade = { CascadeType.MERGE,
-            CascadeType.PERSIST })
-    private List<VariantOption> variantOptions = new ArrayList<>();
+    @OneToMany(mappedBy = "variant", cascade = {CascadeType.MERGE,
+            CascadeType.PERSIST})
+    private List<VariantOptionValue> variantOptions = new ArrayList<>();
 
     private String description;
     private String SKU;

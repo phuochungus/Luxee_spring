@@ -1,11 +1,13 @@
 package me.phuochung.luxee.media;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-import me.phuochung.luxee.product.Product;
-import me.phuochung.luxee.variant.Variant;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -13,22 +15,8 @@ import me.phuochung.luxee.variant.Variant;
 @Entity
 public class Media {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @JsonIgnore
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "variant_id")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @JsonIgnore
-    private Variant variant;
 
     @Column(nullable = false)
     @NotBlank(message = "\"url\" is required")

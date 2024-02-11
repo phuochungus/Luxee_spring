@@ -5,12 +5,13 @@ import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;
 import me.phuochung.luxee.variant.VariantRepository;
-import me.phuochung.luxee.variantoption.VariantOption;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,33 +40,41 @@ public class ProductService {
         if (!pricingValidator.isValid(product.getOptions(),
                                       product.getPrice())) {
             throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
+                    HttpStatus.BAD_REQUEST,
                     "Invalid price and options, either price is null or " +
                             "options must be empty and the other must not be " +
                             "empty.");
         }
-        List<Option> options = product.getOptions().stream()
-                                      .peek((option) -> option.setProduct(
-                                              product)).toList();
-        product.setOptions(options);
-
-        List<Media> media = product.getMedia().stream()
-                                   .peek((m) -> m.setProduct(product)).toList();
-        product.setMedia(media);
-
+        product.getVariants().forEach((v) -> v.setProduct(product));
         return productRepository.save(product);
     }
+
 
     @Transactional
     public void updateMedia(Long id, List<Media> media) {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                   "Product not found"));
-
-        media.forEach((m) -> m.setProduct(product));
         if (!product.getMedia().isEmpty()) product.getMedia().clear();
         product.getMedia().addAll(media);
         productRepository.save(product);
+    }
+
+    private <T> List<List<T>> getCartesianProduct(
+            @NotNull List<List<T>> lists) {
+        List<List<T>> result = List.of(List.of());
+        for (List<T> list : lists) {
+            List<List<T>> newResult = new ArrayList<>(List.of());
+            for (List<T> partialResult : result) {
+                for (T item : list) {
+                    List<T> newPartialResult = new ArrayList<>(partialResult);
+                    newPartialResult.add(item);
+                    newResult.add(newPartialResult);
+                }
+            }
+            result = newResult;
+        }
+        return result;
     }
 
     public void updateVariants(Long productId, List<Variant> variants) {
@@ -80,15 +89,15 @@ public class ProductService {
         productOptions.forEach((option) -> System.out.println(
                 "product's option[0] hash: " + option.hashCode()));
 
-        for (Variant variant : variants) {
-            for (int j = 0; j < productOptions.size(); j++) {
-                VariantOption variantOption = variant.getVariantOptions()
-                                                     .get(j);
-                variantOption.setOption(productOptions.get(j));
-                productOptions.get(j).getVariantOptions().add(variantOption);
-                variantOption.setVariant(variant);
-            }
-        }
+//        for (Variant variant : variants) {
+//            for (int j = 0; j < productOptions.size(); j++) {
+//                VariantOption variantOption = variant.getVariantOptions()
+//                                                     .get(j);
+//                variantOption.setOption(productOptions.get(j));
+//                productOptions.get(j).getVariantOptions().add(variantOption);
+//                variantOption.setVariant(variant);
+//            }
+//        }
         variantRepository.saveAll(variants);
     }
 }
