@@ -1,9 +1,9 @@
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY build/libs/*.jar ./
 
-RUN  chmod +x gradlew && ./gradlew build -x test
+EXPOSE 8080
 
-CMD ["java", "-jar", "build/libs/Luxee-1.jar"]
+ENTRYPOINT ["java","-jar","./Luxee-1.jar"]
