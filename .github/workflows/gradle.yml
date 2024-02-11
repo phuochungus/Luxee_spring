@@ -33,7 +33,7 @@ jobs:
     - name: Build with Gradle Wrapper
       run: |
         chmod +x gradlew
-        ./gradlew build
+        ./gradlew build --scan
       env:
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/luxee
         SPRING_DATASOURCE_USERNAME: postgres
