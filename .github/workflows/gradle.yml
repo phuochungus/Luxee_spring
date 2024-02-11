@@ -13,9 +13,13 @@ jobs:
       postgres:
         image: postgres:16
         env: 
-          POSTGRES_USERNAME: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_USERNAME: Postgres
           POSTGRES_DB: luxee
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/luxee
       SPRING_DATASOURCE_USERNAME: postgres
