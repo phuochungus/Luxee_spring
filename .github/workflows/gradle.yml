@@ -14,9 +14,12 @@ jobs:
         image: postgres:16
         env: 
           POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: luxee
     env:
       SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/luxee
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -42,5 +45,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: chmod
+      run: chmod +x gradlew
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
