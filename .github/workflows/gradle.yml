@@ -13,7 +13,8 @@ jobs:
       postgres:
         image: postgres:16
         env: 
-          POSTGRES_USERNAME: Postgres
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: password
           POSTGRES_DB: luxee
         options: >-
           --health-cmd pg_isready
