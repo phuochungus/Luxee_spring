@@ -1,17 +1,17 @@
 package me.phuochung.luxee.variantoptionvalue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.option.value.Value;
+import me.phuochung.luxee.variant.Variant;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(
         indexes = {
@@ -21,7 +21,6 @@ import me.phuochung.luxee.option.value.Value;
         }
 )
 public class VariantOptionValue {
-
     @Id
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -38,22 +37,31 @@ public class VariantOptionValue {
     @JoinColumn(name = "value_id", nullable = false)
     private Value value;
 
+    @Id
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    @ManyToOne()
+    @JoinColumn(name = "variant_id", nullable = false)
+    private Variant variant;
+
     @NotNull
-    @Column(name = "value_id")
+    @Column(name = "value_id", insertable = false, updatable = false,
+            nullable = false)
     private Long valueId;
 
     @NotNull
-    @Column(name = "option_id")
+    @Column(name = "option_id", nullable = false, insertable = false,
+            updatable = false)
     private Long optionId;
 
-    @Id
-    @Column(name = "variant_id", nullable = false)
-    @JsonIgnore
+    @Column(name = "variant_id", nullable = false, insertable = false,
+            updatable = false)
+    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
     private Long variantId;
 
-    public VariantOptionValue(Long valueId, Long optionId, Long variantId) {
+    public VariantOptionValue(Long valueId, Long optionId) {
         this.valueId = valueId;
         this.optionId = optionId;
-        this.variantId = variantId;
     }
 }

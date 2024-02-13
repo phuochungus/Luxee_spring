@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.product.Product;
 import me.phuochung.luxee.variantoptionvalue.VariantOptionValue;
@@ -17,6 +14,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Variant {
     @Id
@@ -25,7 +23,7 @@ public class Variant {
     private Long id;
 
     @ManyToOne()
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
@@ -35,13 +33,14 @@ public class Variant {
     @Valid
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "variant_id")
+    @OneToMany(mappedBy = "variant", cascade = CascadeType.PERSIST,
+            orphanRemoval = true)
     @Valid
     private List<VariantOptionValue> variantOptionValues = new ArrayList<>();
 
     @Column(nullable = false)
     private Double price;
+
     private String description;
     private String SKU;
     private String barcode;
@@ -50,4 +49,9 @@ public class Variant {
     private Long unavailable;
     private Long committed;
     private Long available;
+
+    public Variant(List<VariantOptionValue> variantOptionValues, Double price) {
+        this.variantOptionValues = variantOptionValues;
+        this.price = price;
+    }
 }

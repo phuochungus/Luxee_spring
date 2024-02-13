@@ -2,9 +2,11 @@ package me.phuochung.luxee.product;
 
 import jakarta.transaction.Transactional;
 import me.phuochung.luxee.media.Media;
-import me.phuochung.luxee.option.Option;
+import me.phuochung.luxee.option.OptionRepository;
+import me.phuochung.luxee.option.value.ValueRepository;
 import me.phuochung.luxee.variant.Variant;
 import me.phuochung.luxee.variant.VariantRepository;
+import me.phuochung.luxee.variant.VariantValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,16 @@ public class ProductService {
 
     @Autowired
     private VariantRepository variantRepository;
+
+    @Autowired
+    private VariantValidator variantValidator;
+
+    @Autowired
+    private OptionRepository optionRepository;
+
+    @Autowired
+    private ValueRepository valueRepository;
+
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -59,22 +71,6 @@ public class ProductService {
         productRepository.save(product);
     }
 
-//    private <T> List<List<T>> getCartesianProduct(
-//            @NotNull List<List<T>> lists) {
-//        List<List<T>> result = List.of(List.of());
-//        for (List<T> list : lists) {
-//            List<List<T>> newResult = new ArrayList<>(List.of());
-//            for (List<T> partialResult : result) {
-//                for (T item : list) {
-//                    List<T> newPartialResult = new ArrayList<>(partialResult);
-//                    newPartialResult.add(item);
-//                    newResult.add(newPartialResult);
-//                }
-//            }
-//            result = newResult;
-//        }
-//        return result;
-//    }
 
     @Transactional
     public void updateVariants(Long productId, List<Variant> variants) {
@@ -82,16 +78,28 @@ public class ProductService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                   "Product not found"));
 
+        for (Variant variant : variants) {
+            if (!variantValidator.isValid(variant, product)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                                  "Invalid variant option " +
+                                                          "values");
+            }
+        }
+
         if (!product.getVariants().isEmpty()) product.getVariants().clear();
 
         product.getVariants().addAll(variants);
-        variants.forEach((variant) -> variant.setProduct(product));
+        variants.forEach((v) -> v.setProduct(product));
 
-        List<Option> productOptions = product.getOptions();
-        productOptions.forEach((option) -> System.out.println(
-                "product's option[0] hash: " + option.hashCode()));
-
-        variantRepository.saveAll(variants);
+        variants.forEach(v -> {
+            v.getVariantOptionValues().forEach((vov) -> {
+                vov.setVariant(v);
+                vov.setOption(
+                        optionRepository.getReferenceById(vov.getOptionId()));
+                vov.setValue(
+                        valueRepository.getReferenceById(vov.getValueId()));
+            });
+            variantRepository.save(v);
+        });
     }
-
 }

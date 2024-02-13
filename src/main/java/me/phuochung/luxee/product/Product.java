@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.variant.Variant;
@@ -13,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Product implements Cloneable {
+public class Product {
     @Id
     @GeneratedValue
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -28,7 +32,8 @@ public class Product implements Cloneable {
     @Valid
     private List<Option> options = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE,
+            orphanRemoval = true)
     @Valid
     private List<Variant> variants = new ArrayList<>();
 

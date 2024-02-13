@@ -1,9 +1,12 @@
 package me.phuochung.luxee.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import me.phuochung.luxee.media.Media;
 import me.phuochung.luxee.option.Option;
 import me.phuochung.luxee.option.value.Value;
+import me.phuochung.luxee.variant.Variant;
+import me.phuochung.luxee.variantoptionvalue.VariantOptionValue;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -12,12 +15,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -155,32 +157,63 @@ class ProductControllerTest {
                .andExpect(status().isNotFound());
     }
 
-    //    @Test()
+    @Test()
     void ShouldCreateVariants() throws Exception {
         Product testProduct = new Product();
         testProduct.setTitle("ShouldCreateVariants");
         testProduct.setOptions(testOptions);
 
+        Product finalTestProduct = testProduct;
         mockMvc.perform(
                        post("/products").contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(
                                                 testProduct)))
                .andExpect(status().isOk())
                .andExpect(content().string(matchesPattern("\\d+")))
-               .andDo(result -> testProduct.setId(Long.parseLong(
-                       result.getResponse().getContentAsString())));
+               .andDo(result -> finalTestProduct.setId(
+                       Long.parseLong(
+                               result.getResponse().getContentAsString()))
+               );
 
-//        List<Variant> testVariants = List.of(
-//                new Variant(null, null, null, List.of(
-//                        new VariantOptionValue(
-//                                null, null,
-//                                testOptions.get(0).getValues().get(0).getId(),
-//
-//                                )
-//                ), 100.0, null, null,
-//                            null, null, null, null, null, null)
-//
-//
-//        );
+        MvcResult result = mockMvc.perform(
+                                          get("/products/" + testProduct.getId()))
+                                  .andExpect(status().isOk())
+                                  .andReturn();
+
+        testProduct = objectMapper.readValue(
+                result.getResponse().getContentAsString(), Product.class);
+
+        List<Set<VariantOptionValue>> listList = new ArrayList<>();
+
+
+        testProduct.getOptions().forEach(option -> {
+            Set<VariantOptionValue> variantOptionValues = new HashSet<>();
+            option.getValues().forEach(value -> {
+                variantOptionValues.add(
+                        new VariantOptionValue(value.getId(), option.getId()));
+            });
+            listList.add(variantOptionValues);
+        });
+
+        var cartesianProduct = Sets.cartesianProduct(listList);
+
+        List<Variant> variants = new ArrayList<>();
+
+        for (List<VariantOptionValue> variantOptionValues : cartesianProduct) {
+            variants.add(
+                    new Variant(variantOptionValues, 100.0));
+        }
+
+        mockMvc.perform(
+                       put("/products/" + testProduct.getId() + "/variants")
+                               .contentType(MediaType.APPLICATION_JSON)
+                               .content(objectMapper.writeValueAsString(variants)))
+               .andExpect(status().isOk());
+
+        mockMvc.perform(get("/products/" + testProduct.getId()))
+               .andExpectAll(
+                       jsonPath("$.variants[*].id", hasSize(4))
+               );
     }
+
 }
