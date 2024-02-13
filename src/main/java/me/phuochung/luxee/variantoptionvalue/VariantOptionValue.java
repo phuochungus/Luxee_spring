@@ -1,7 +1,7 @@
 package me.phuochung.luxee.variantoptionvalue;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -57,7 +57,7 @@ public class VariantOptionValue {
 
     @Column(name = "variant_id", nullable = false, insertable = false,
             updatable = false)
-    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long variantId;
 
     public VariantOptionValue(Long valueId, Long optionId) {
