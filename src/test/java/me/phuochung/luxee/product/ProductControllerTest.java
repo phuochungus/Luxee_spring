@@ -28,20 +28,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     private final List<Option> testOptions = List.of(
-            new Option(null, List.of(
-                    new Value(null, "Red"),
-                    new Value(null, "Blue")
-            ), "Color"),
-            new Option(null, List.of(
-                    new Value(null, "S"),
-                    new Value(null, "M"),
-                    new Value(null, "L")
-            ), "Size"));
+            new Option(List.of(new Value("Red"), new Value("Blue")), "Color"),
+            new Option(List.of(new Value("S"), new Value("L")), "Size"));
 
     private final List<Media> testMedia = List.of(
-            new Media(null, "test_url1", "test_public_id1",
+            new Media("http://test_url1", "test_public_id1",
                       Media.MediaType.IMAGE),
-            new Media(null, "test_url2", "test_public_id2",
+            new Media("http://test_url2", "test_public_id2",
                       Media.MediaType.IMAGE));
 
     @Autowired
@@ -58,41 +51,31 @@ class ProductControllerTest {
         testProduct.setMedia(testMedia);
 
         mockMvc.perform(
-                       post("/products")
-                               .contentType(MediaType.APPLICATION_JSON)
-                               .content(objectMapper.writeValueAsString(testProduct)))
-               .andExpectAll(
-                       status().isOk(),
-                       content().string(matchesPattern("\\d+"))
-               )
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
+               .andExpectAll(status().isOk(),
+                             content().string(matchesPattern("\\d+")))
                .andDo(result -> testProduct.setId(Long.parseLong(
                        result.getResponse().getContentAsString())));
 
         mockMvc.perform(get("/products/" + testProduct.getId().toString()))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$..title").value(testProduct.getTitle()))
-               .andExpectAll(
-                       jsonPath("$.media.[*].url").value(
-                               contains(testMedia.stream()
-                                                 .map(Media::getUrl)
-                                                 .toArray())
-                       ),
-                       jsonPath("$.options[*].name").value(
-                               contains(testOptions.stream()
-                                                   .map(Option::getName)
-                                                   .toArray())
-                       ),
-                       jsonPath("$.options[*].values[*].value").value(
-                               contains(
-                                       testOptions.stream()
-                                                  .map(Option::getValues)
-                                                  .flatMap(List::stream)
-                                                  .map(Value::getValue)
-                                                  .toArray()
-                               )
-                       ),
-                       jsonPath("$.id").value(testProduct.getId().intValue())
-               );
+               .andExpectAll(jsonPath("$.media.[*].url").value(contains(
+                                     testMedia.stream().map(Media::getUrl).toArray())),
+                             jsonPath("$.options[*].name").value(contains(
+                                     testOptions.stream()
+                                                .map(Option::getName)
+                                                .toArray())),
+                             jsonPath("$.options[*].values[*].value").value(
+                                     contains(testOptions.stream()
+                                                         .map(Option::getValues)
+                                                         .flatMap(List::stream)
+                                                         .map(Value::getValue)
+                                                         .toArray())),
+                             jsonPath("$.id").value(
+                                     testProduct.getId().intValue()));
 
     }
 
@@ -103,9 +86,9 @@ class ProductControllerTest {
         testProduct.setPrice(100.0);
         testProduct.setOptions(testOptions);
         mockMvc.perform(
-                       post("/products")
-                               .contentType(MediaType.APPLICATION_JSON)
-                               .content(objectMapper.writeValueAsString(testProduct)))
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
                .andExpect(status().isBadRequest());
     }
 
@@ -125,51 +108,79 @@ class ProductControllerTest {
         testProduct.setMedia(testMedia);
 
         mockMvc.perform(
-                       post("/products")
-                               .contentType(MediaType.APPLICATION_JSON)
-                               .content(objectMapper.writeValueAsString(testProduct)))
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
+               .andExpect(status().isOk())
+               .andExpect(content().string(matchesPattern("\\d+")))
+               .andDo(result -> testProduct.setId(
+                       Long.parseLong(
+                               result.getResponse().getContentAsString()))
+               );
+
+        mockMvc.perform(get("/products/" + testProduct.getId()))
+               .andExpectAll(status().isOk(),
+                             jsonPath("$.price").value(randomPrice),
+                             jsonPath("$.media[*].url").value(
+                                     containsInAnyOrder(testMedia.stream()
+                                                                 .map(Media::getUrl)
+                                                                 .toArray())));
+
+        List<Media> newMedia = List.of(
+                new Media(null, "http://new_url1", "new_public_id1",
+                          Media.MediaType.IMAGE),
+                new Media(null, "http://new_url2", "new_public_id2",
+                          Media.MediaType.IMAGE));
+
+        mockMvc.perform(
+                       put("/products/" + testProduct.getId() + "/media").contentType(
+                                                                                 MediaType.APPLICATION_JSON)
+                                                                         .content(
+                                                                                 objectMapper.writeValueAsString(
+                                                                                         newMedia)))
+               .andExpect(status().isOk());
+
+        mockMvc.perform(get("/products/" + testProduct.getId()))
+               .andExpectAll(status().isOk(), jsonPath("$.media[*].url").value(
+                       containsInAnyOrder(newMedia.stream()
+                                                  .map(Media::getUrl)
+                                                  .toArray())));
+    }
+
+    @Test
+    void UpdateNotFoundProduct() throws Exception {
+        mockMvc.perform(
+                       put("/products/0/media").contentType(MediaType.APPLICATION_JSON)
+                                               .content("[]"))
+               .andExpect(status().isNotFound());
+    }
+
+    //    @Test()
+    void ShouldCreateVariants() throws Exception {
+        Product testProduct = new Product();
+        testProduct.setTitle("ShouldCreateVariants");
+        testProduct.setOptions(testOptions);
+
+        mockMvc.perform(
+                       post("/products").contentType(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(
+                                                testProduct)))
                .andExpect(status().isOk())
                .andExpect(content().string(matchesPattern("\\d+")))
                .andDo(result -> testProduct.setId(Long.parseLong(
                        result.getResponse().getContentAsString())));
 
-        mockMvc.perform(
-                       get("/products/" + testProduct.getId()))
-               .andExpectAll(
-                       status().isOk(),
-                       jsonPath("$.price").value(randomPrice),
-                       jsonPath("$.media[*].url").value(
-                               containsInAnyOrder(
-                                       testMedia.stream()
-                                                .map(Media::getUrl)
-                                                .toArray()
-                               )
-                       )
-               );
-
-        List<Media> newMedia = List.of(
-                new Media(null, "new_url1", "new_public_id1",
-                          Media.MediaType.IMAGE),
-                new Media(null, "new_url2", "new_public_id2",
-                          Media.MediaType.IMAGE));
-
-        mockMvc.perform(
-                       put("/products/" + testProduct.getId() + "/media")
-                               .contentType(MediaType.APPLICATION_JSON)
-                               .content(objectMapper.writeValueAsString(newMedia)))
-               .andExpect(status().isOk());
-
-        mockMvc.perform(
-                       get("/products/" + testProduct.getId()))
-               .andExpectAll(
-                       status().isOk(),
-                       jsonPath("$.media[*].url").value(
-                               containsInAnyOrder(
-                                       newMedia.stream()
-                                               .map(Media::getUrl)
-                                               .toArray()
-                               )
-                       )
-               );
+//        List<Variant> testVariants = List.of(
+//                new Variant(null, null, null, List.of(
+//                        new VariantOptionValue(
+//                                null, null,
+//                                testOptions.get(0).getValues().get(0).getId(),
+//
+//                                )
+//                ), 100.0, null, null,
+//                            null, null, null, null, null, null)
+//
+//
+//        );
     }
 }

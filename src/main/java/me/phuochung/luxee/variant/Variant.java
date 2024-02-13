@@ -1,7 +1,9 @@
 package me.phuochung.luxee.variant;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,29 +21,30 @@ import java.util.List;
 public class Variant {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @ManyToOne()
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
     private Product product;
 
-    @Column(name = "product_id", updatable = false, insertable = false)
-    private Long productId;
-
     @OneToMany(cascade = CascadeType.ALL)
+    @Valid
     private List<Media> media = new ArrayList<>();
 
-    @OneToMany(mappedBy = "variant", cascade = {CascadeType.MERGE,
-            CascadeType.PERSIST})
-    private List<VariantOptionValue> variantOptions = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "variant_id")
+    @Valid
+    private List<VariantOptionValue> variantOptionValues = new ArrayList<>();
 
+    @Column(nullable = false)
+    private Double price;
     private String description;
     private String SKU;
     private String barcode;
-    private Double price;
     private Double compareAtPrice;
     private Double costPerItem;
     private Long unavailable;

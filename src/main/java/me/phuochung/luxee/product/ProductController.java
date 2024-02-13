@@ -25,7 +25,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable Long id) {
+    public Product getProduct(@PathVariable Long id) throws
+                                                     ResponseStatusException {
         return productService.getProduct(id).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -34,6 +35,7 @@ public class ProductController {
 
     @PostMapping()
     public Long createProduct(@Valid @RequestBody Product product) {
+        System.out.println(product);
         return productService.createProduct(product).getId();
     }
 
@@ -44,6 +46,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/variants")
+    @ResponseStatus(HttpStatus.OK)
     public void addVariants(@PathVariable Long id,
                             @RequestBody @Valid List<Variant> variants) {
         productService.updateVariants(id, variants);
