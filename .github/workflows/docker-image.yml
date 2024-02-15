@@ -27,7 +27,6 @@ jobs:
       run: |
         chmod +x gradlew
         ./gradlew build -x test
-    - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
        docker build . -t phuochungus:luxee
