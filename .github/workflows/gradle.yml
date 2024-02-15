@@ -40,6 +40,8 @@ jobs:
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/luxee
         SPRING_DATASOURCE_USERNAME: postgres
         SPRING_DATASOURCE_PASSWORD: password
+        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+
       
   dependency-submission:
     runs-on: ubuntu-latest
