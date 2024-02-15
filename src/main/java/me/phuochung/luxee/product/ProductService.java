@@ -49,15 +49,17 @@ public class ProductService {
     }
 
     @Transactional
-    public Product createProduct(Product product)
-            throws ResponseStatusException {
+    public Product createProduct(Product product) throws
+                                                  ResponseStatusException {
         if (!pricingValidator.isValid(product.getOptions(),
                                       product.getPrice())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Invalid price and options, either price is null or " +
-                            "options must be empty and the other must not be " +
-                            "empty.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                              "Invalid price and options, " +
+                                                      "either price is null " +
+                                                      "or " + "options must " +
+                                                      "be empty and the other" +
+                                                      " must not be " +
+                                                      "empty.");
         }
         product.getVariants().forEach((v) -> v.setProduct(product));
 
@@ -67,12 +69,18 @@ public class ProductService {
 
     @Transactional
     public void updateMedia(Long id, List<Media> media) {
-        Product product = productRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                                  "Product not found"));
+        Product product = productRepository.findById(id)
+                                           .orElseThrow(
+                                                   () -> new ResponseStatusException(
+                                                           HttpStatus.NOT_FOUND,
+                                                           "Product not " +
+                                                                   "found"));
         if (!product.getMedia().isEmpty()) {
-            product.getMedia()
-                   .forEach(m -> mediaService.deleteAsset(m.getPublicId()));
+            product.getMedia().forEach(m -> {
+                if (m.getPublicId()!=null)
+                    mediaService.deleteAsset(m.getPublicId());
+
+            });
             product.getMedia().clear();
         }
         product.getMedia().addAll(media);
@@ -82,15 +90,17 @@ public class ProductService {
 
     @Transactional
     public void updateVariants(Long productId, List<Variant> variants) {
-        Product product = productRepository.findById(productId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                                  "Product not found"));
+        Product product = productRepository.findById(productId)
+                                           .orElseThrow(
+                                                   () -> new ResponseStatusException(
+                                                           HttpStatus.NOT_FOUND,
+                                                           "Product not " +
+                                                                   "found"));
 
         for (Variant variant : variants) {
             if (!variantValidator.isValid(variant, product)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                                  "Invalid variant option " +
-                                                          "values");
+                                                  "Invalid variant option " + "values");
             }
         }
 
