@@ -3,7 +3,9 @@ package me.phuochung.luxee.cloudinary;
 import com.cloudinary.Cloudinary;
 import me.phuochung.luxee.media.MediaService;
 import me.phuochung.luxee.media.Signature;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,9 +23,16 @@ public class CloudinaryService implements MediaService {
         return new Signature(timestamp, signature);
     }
 
-    public void deleteAsset(String publicId) throws IOException {
+    @Override
+    public void deleteAsset(String publicId) throws ResponseStatusException {
         HashMap<String, String> options = new HashMap<>();
         options.put("invalidate", "true");
-        cloudinary.uploader().destroy(publicId, options);
+        try {
+            cloudinary.uploader().destroy(publicId, options);
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Failed to delete asset");
+        }
     }
 }

@@ -2,6 +2,7 @@ package me.phuochung.luxee.product;
 
 import jakarta.transaction.Transactional;
 import me.phuochung.luxee.media.Media;
+import me.phuochung.luxee.media.MediaService;
 import me.phuochung.luxee.option.OptionRepository;
 import me.phuochung.luxee.option.value.ValueRepository;
 import me.phuochung.luxee.variant.Variant;
@@ -35,6 +36,9 @@ public class ProductService {
     @Autowired
     private ValueRepository valueRepository;
 
+    @Autowired
+    private MediaService mediaService;
+
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -66,7 +70,11 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                   "Product not found"));
-        if (!product.getMedia().isEmpty()) product.getMedia().clear();
+        if (!product.getMedia().isEmpty()) {
+            product.getMedia()
+                   .forEach(m -> mediaService.deleteAsset(m.getPublicId()));
+            product.getMedia().clear();
+        }
         product.getMedia().addAll(media);
         productRepository.save(product);
     }
