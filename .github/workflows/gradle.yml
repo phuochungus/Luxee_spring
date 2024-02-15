@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  container-job:
+  test:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -35,7 +35,7 @@ jobs:
     - name: Build with Gradle Wrapper
       run: |
         chmod +x gradlew
-        ./gradlew build --scan
+        ./gradlew test
       env:
         SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/luxee
         SPRING_DATASOURCE_USERNAME: postgres
