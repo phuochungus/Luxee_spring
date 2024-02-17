@@ -22,7 +22,7 @@ public class Option {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "option_id", nullable = false)
     @OrderColumn
     @Valid

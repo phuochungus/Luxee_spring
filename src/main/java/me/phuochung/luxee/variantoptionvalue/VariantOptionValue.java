@@ -32,7 +32,6 @@ public class VariantOptionValue {
     @Id
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "value_id", nullable = false)
     private Value value;

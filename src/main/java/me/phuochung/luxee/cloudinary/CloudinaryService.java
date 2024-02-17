@@ -1,8 +1,8 @@
 package me.phuochung.luxee.cloudinary;
 
 import com.cloudinary.Cloudinary;
-import me.phuochung.luxee.media.MediaService;
 import me.phuochung.luxee.media.Signature;
+import me.phuochung.luxee.media.StorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Service
-public class CloudinaryService implements MediaService {
+public class CloudinaryService implements StorageService {
     private final Cloudinary cloudinary = new Cloudinary();
 
     public Signature generateUploadSignature() {

@@ -2,9 +2,10 @@ package me.phuochung.luxee.product;
 
 import jakarta.transaction.Transactional;
 import me.phuochung.luxee.media.Media;
-import me.phuochung.luxee.media.MediaService;
+import me.phuochung.luxee.media.StorageService;
 import me.phuochung.luxee.option.OptionRepository;
 import me.phuochung.luxee.option.value.ValueRepository;
+import me.phuochung.luxee.product.dto.UpdateProductDTO;
 import me.phuochung.luxee.variant.Variant;
 import me.phuochung.luxee.variant.VariantRepository;
 import me.phuochung.luxee.variant.VariantValidator;
@@ -37,7 +38,7 @@ public class ProductService {
     private ValueRepository valueRepository;
 
     @Autowired
-    private MediaService mediaService;
+    private StorageService storageService;
 
 
     public List<Product> getAllProducts() {
@@ -78,7 +79,7 @@ public class ProductService {
         if (!product.getMedia().isEmpty()) {
             product.getMedia().forEach(m -> {
                 if (m.getPublicId()!=null)
-                    mediaService.deleteAsset(m.getPublicId());
+                    storageService.deleteAsset(m.getPublicId());
 
             });
             product.getMedia().clear();
@@ -105,10 +106,8 @@ public class ProductService {
         }
 
         if (!product.getVariants().isEmpty()) product.getVariants().clear();
-
         product.getVariants().addAll(variants);
         variants.forEach((v) -> v.setProduct(product));
-
         variants.forEach(v -> {
             v.getVariantOptionValues().forEach((vov) -> {
                 vov.setVariant(v);
@@ -117,7 +116,39 @@ public class ProductService {
                 vov.setValue(
                         valueRepository.getReferenceById(vov.getValueId()));
             });
-            variantRepository.save(v);
         });
+        variantRepository.saveAll(variants);
+    }
+
+    public void updateProduct(Long id, UpdateProductDTO updateProductDto) {
+        Product product = productRepository.findById(id)
+                                           .orElseThrow(
+                                                   () -> new ResponseStatusException(
+                                                           HttpStatus.NOT_FOUND,
+                                                           "Product not " +
+                                                                   "found"));
+        if (!pricingValidator.isValid(updateProductDto.getOptions(),
+                                      updateProductDto.getPrice())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                              "Invalid price and options, " +
+                                                      "either price is null " +
+                                                      "or " + "options must " +
+                                                      "be empty and the other" +
+                                                      " must not be " +
+                                                      "empty.");
+        }
+        product.setTitle(updateProductDto.getTitle());
+        product.setPrice(updateProductDto.getPrice());
+        product.setCompareAtPrice(updateProductDto.getCompareAtPrice());
+        product.setCost(updateProductDto.getCost());
+        product.setSKU(updateProductDto.getSKU());
+        product.setBarcode(updateProductDto.getBarcode());
+        product.setDescription(updateProductDto.getDescription());
+        product.setUnavailable(updateProductDto.getUnavailable());
+        product.setAvailable(updateProductDto.getAvailable());
+        product.setCommitted(updateProductDto.getCommitted());
+        product.setIsDraft(updateProductDto.getIsDraft());
+        productRepository.save(product);
+
     }
 }

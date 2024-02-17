@@ -2,6 +2,7 @@ package me.phuochung.luxee.product;
 
 import jakarta.validation.Valid;
 import me.phuochung.luxee.media.Media;
+import me.phuochung.luxee.product.dto.UpdateProductDTO;
 import me.phuochung.luxee.variant.Variant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,13 @@ public class ProductController {
 
     @PostMapping()
     public Long createProduct(@Valid @RequestBody Product product) {
-        System.out.println(product);
         return productService.createProduct(product).getId();
+    }
+
+    @PutMapping("/{id}")
+    public void updateProduct(@PathVariable Long id,
+                              @RequestBody @Valid UpdateProductDTO updateProductDto) {
+        productService.updateProduct(id, updateProductDto);
     }
 
     @PutMapping("/{id}/media")

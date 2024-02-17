@@ -30,7 +30,7 @@ public class Media {
     private String publicId;
 
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = "\"mediaType\" is required")
     private MediaType mediaType = MediaType.IMAGE;
 
     public Media(String url, String publicId, MediaType mediaType) {
